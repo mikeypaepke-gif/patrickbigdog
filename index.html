@@ -1,332 +1,582 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Patrick Big Dog 🐾</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIG DOG CLUB™</title>
+<meta name="description" content="You Found Patrick. Welcome to the Big Dog Club.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  :root {
+    --bg: #0a0a0a;
+    --text: #f5f5f5;
+    --accent: #c9a84c;
+    --accent-dim: #8a7033;
+    --accent-glow: rgba(201,168,76,0.15);
+    --card-bg: #141414;
+    --border: #222;
+  }
+  
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-    body {
-      font-family: 'Nunito', sans-serif;
-      background: #FFF8F0;
-      color: #2D2013;
-      overflow-x: hidden;
-    }
+  /* ── Floating paw trail ── */
+  .paw-trail {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .paw-float {
+    position: absolute;
+    font-size: 1.4rem;
+    opacity: 0;
+    animation: floatUp var(--dur) ease-in var(--delay) infinite;
+  }
+  @keyframes floatUp {
+    0%   { opacity: 0; transform: translateY(0) rotate(var(--rot)); }
+    10%  { opacity: 0.07; }
+    80%  { opacity: 0.04; }
+    100% { opacity: 0; transform: translateY(-100vh) rotate(calc(var(--rot) + 40deg)); }
+  }
 
-    /* ── Hero ── */
-    .hero {
-      min-height: 100vh;
-      background: linear-gradient(160deg, #FFCD6B 0%, #FF8C42 60%, #C75B1A 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 40px 20px;
-      position: relative;
-      overflow: hidden;
-    }
+  /* ── Nav ── */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+    transition: border-color 0.3s;
+  }
+  nav:hover { border-color: var(--accent-dim); }
+  nav .logo {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    cursor: default;
+    transition: transform 0.2s;
+  }
+  nav .logo:hover { transform: scale(1.04); }
+  nav .logo span { color: var(--accent); }
+  nav .links { display: flex; gap: 2rem; }
+  nav .links a {
+    color: #999;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s, transform 0.2s;
+    position: relative;
+  }
+  nav .links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transition: transform 0.2s;
+  }
+  nav .links a:hover, nav .links a.active { color: var(--accent); }
+  nav .links a:hover::after, nav .links a.active::after { transform: scaleX(1); }
+  
+  /* ── Hero ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+  }
 
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    }
+  .hero .paw {
+    font-size: 4.5rem;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+    animation: pawBounce 2.5s ease-in-out infinite;
+    cursor: default;
+    filter: drop-shadow(0 0 20px rgba(201,168,76,0.3));
+  }
+  @keyframes pawBounce {
+    0%, 100% { transform: scale(1) rotate(-5deg); }
+    30%       { transform: scale(1.15) rotate(5deg); }
+    60%       { transform: scale(0.95) rotate(-3deg); }
+  }
 
-    .paw-float {
-      position: absolute;
-      font-size: 80px;
-      opacity: 0.12;
-      animation: floatPaw 6s ease-in-out infinite;
-    }
-    .paw-float:nth-child(1) { top: 8%; left: 6%; animation-delay: 0s; }
-    .paw-float:nth-child(2) { top: 15%; right: 8%; animation-delay: 1.5s; }
-    .paw-float:nth-child(3) { bottom: 20%; left: 10%; animation-delay: 3s; }
-    .paw-float:nth-child(4) { bottom: 10%; right: 6%; animation-delay: 4.5s; }
+  .hero .nfc-badge {
+    display: none;
+    padding: 0.6rem 1.5rem;
+    border: 1px solid var(--accent);
+    border-radius: 100px;
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    animation: fadeIn 1s ease-out 0.5s both, glowPulse 2s ease-in-out infinite;
+    background: var(--accent-glow);
+  }
+  @keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(201,168,76,0.2); }
+    50%       { box-shadow: 0 0 25px rgba(201,168,76,0.5); }
+  }
 
-    @keyframes floatPaw {
-      0%, 100% { transform: translateY(0) rotate(-10deg); }
-      50% { transform: translateY(-20px) rotate(10deg); }
-    }
+  .hero h1 {
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    margin-bottom: 0.5rem;
+    animation: fadeSlideUp 0.8s ease-out both;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero .tagline {
+    font-size: 1.1rem;
+    color: #888;
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.05em;
+    animation: fadeSlideUp 0.8s ease-out 0.15s both;
+  }
 
-    .hero-avatar {
-      width: 160px;
-      height: 160px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #fff3e0, #ffe0b2);
-      border: 6px solid #fff;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 80px;
-      margin-bottom: 24px;
-      position: relative;
-      z-index: 1;
-      animation: boop 3s ease-in-out infinite;
-    }
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
-    @keyframes boop {
-      0%, 100% { transform: scale(1) rotate(-2deg); }
-      50% { transform: scale(1.05) rotate(2deg); }
-    }
+  .cta-btn {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    background: var(--accent);
+    color: var(--bg);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    transition: all 0.25s;
+    animation: fadeSlideUp 0.8s ease-out 0.3s both;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.15);
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+  }
+  .cta-btn:hover::before { transform: translateX(0); }
+  .cta-btn:hover {
+    background: #dbb85a;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(201,168,76,0.35);
+  }
+  .cta-btn:active { transform: translateY(-1px); }
+  
+  /* ── Sections ── */
+  section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+    position: relative;
+    z-index: 1;
+  }
+  section h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+  }
+  section h2 span { color: var(--accent); }
+  section p {
+    color: #aaa;
+    line-height: 1.8;
+    font-size: 1.05rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
+    margin: 0 auto 4rem;
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* ── About / Stats ── */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin: 2.5rem 0;
+  }
+  .stat {
+    text-align: center;
+    padding: 1.5rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    cursor: default;
+  }
+  .stat:hover {
+    border-color: var(--accent-dim);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 30px rgba(201,168,76,0.1);
+  }
+  .stat .number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--accent);
+    transition: transform 0.2s;
+  }
+  .stat:hover .number { transform: scale(1.1); }
+  .stat .label {
+    font-size: 0.75rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 0.3rem;
+  }
+  
+  /* ── Perks ── */
+  .perks {
+    display: grid;
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  .perk {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.4rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    cursor: default;
+  }
+  .perk:hover {
+    border-color: var(--accent-dim);
+    transform: translateX(6px);
+    box-shadow: -4px 0 20px rgba(201,168,76,0.08);
+  }
+  .perk .icon {
+    font-size: 1.6rem;
+    flex-shrink: 0;
+    transition: transform 0.25s;
+  }
+  .perk:hover .icon { transform: scale(1.2) rotate(-5deg); }
+  .perk .text h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.3rem; }
+  .perk .text p { font-size: 0.85rem; color: #888; margin: 0; line-height: 1.5; }
+  
+  /* ── Collabs ── */
+  .collab-types {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  .collab-card {
+    padding: 1.5rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-align: center;
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    cursor: default;
+  }
+  .collab-card:hover {
+    border-color: var(--accent-dim);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(201,168,76,0.1);
+  }
+  .collab-card .icon {
+    font-size: 2.2rem;
+    margin-bottom: 0.8rem;
+    display: block;
+    transition: transform 0.25s;
+  }
+  .collab-card:hover .icon { transform: scale(1.15) rotate(8deg); }
+  .collab-card h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.4rem; }
+  .collab-card p { font-size: 0.8rem; color: #888; margin: 0; line-height: 1.4; }
+  
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    border-top: 1px solid var(--border);
+    color: #444;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    position: relative;
+    z-index: 1;
+  }
+  footer p { transition: color 0.2s; cursor: default; }
+  footer p:hover { color: #666; }
 
-    .hero h1 {
-      font-size: clamp(2.8rem, 8vw, 5rem);
-      font-weight: 900;
-      color: #fff;
-      text-shadow: 0 4px 20px rgba(0,0,0,0.25);
-      line-height: 1.1;
-      position: relative;
-      z-index: 1;
-    }
+  /* ── NFC found ── */
+  .nfc-found { display: none; }
 
-    .hero h1 span {
-      display: block;
-      font-size: clamp(1.4rem, 4vw, 2rem);
-      font-weight: 700;
-      color: #fff3e0;
-      margin-top: 8px;
-    }
+  /* ── Scroll reveal ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
-    .tagline {
-      font-size: clamp(1rem, 3vw, 1.3rem);
-      color: #fff3e0;
-      max-width: 480px;
-      margin: 20px auto 0;
-      line-height: 1.6;
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero-cta {
-      margin-top: 36px;
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: #fff;
-      color: #C75B1A;
-      font-family: 'Nunito', sans-serif;
-      font-size: 1.2rem;
-      font-weight: 900;
-      padding: 16px 36px;
-      border-radius: 50px;
-      text-decoration: none;
-      box-shadow: 0 6px 30px rgba(0,0,0,0.2);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .btn-primary:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 10px 40px rgba(0,0,0,0.28); }
-
-    .btn-tiktok {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: #000;
-      color: #fff;
-      font-family: 'Nunito', sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      padding: 12px 28px;
-      border-radius: 50px;
-      text-decoration: none;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-      transition: transform 0.2s;
-    }
-    .btn-tiktok:hover { transform: translateY(-2px); }
-
-    /* ── About ── */
-    .about {
-      padding: 80px 20px;
-      text-align: center;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .about h2 {
-      font-size: clamp(1.8rem, 5vw, 2.8rem);
-      font-weight: 900;
-      color: #C75B1A;
-      margin-bottom: 20px;
-    }
-
-    .about p {
-      font-size: 1.15rem;
-      line-height: 1.8;
-      color: #5a3a1a;
-      margin-bottom: 16px;
-    }
-
-    /* ── Stats ── */
-    .stats {
-      background: linear-gradient(135deg, #FF8C42, #FFCD6B);
-      padding: 60px 20px;
-      text-align: center;
-    }
-
-    .stats-grid {
-      display: flex;
-      justify-content: center;
-      gap: 48px;
-      flex-wrap: wrap;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .stat-item h3 {
-      font-size: clamp(2rem, 6vw, 3.5rem);
-      font-weight: 900;
-      color: #fff;
-    }
-    .stat-item p {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #fff3e0;
-      margin-top: 4px;
-    }
-
-    /* ── Join CTA ── */
-    .join {
-      padding: 80px 20px;
-      text-align: center;
-      background: #2D2013;
-    }
-
-    .join h2 {
-      font-size: clamp(1.8rem, 5vw, 3rem);
-      font-weight: 900;
-      color: #FFCD6B;
-      margin-bottom: 16px;
-    }
-
-    .join p {
-      color: #c9a96e;
-      font-size: 1.1rem;
-      max-width: 500px;
-      margin: 0 auto 32px;
-      line-height: 1.7;
-    }
-
-    .btn-join {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: linear-gradient(135deg, #FFCD6B, #FF8C42);
-      color: #2D2013;
-      font-family: 'Nunito', sans-serif;
-      font-size: 1.2rem;
-      font-weight: 900;
-      padding: 18px 44px;
-      border-radius: 50px;
-      text-decoration: none;
-      box-shadow: 0 6px 30px rgba(255,140,66,0.4);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .btn-join:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 10px 40px rgba(255,140,66,0.55); }
-
-    /* ── Footer ── */
-    footer {
-      text-align: center;
-      padding: 30px;
-      background: #1a110a;
-      color: #7a5a3a;
-      font-size: 0.9rem;
-    }
-  </style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  
+  @media (max-width: 600px) {
+    nav .links { gap: 1rem; }
+    nav .links a { font-size: 0.7rem; }
+    .stats { grid-template-columns: 1fr; }
+    .collab-types { grid-template-columns: 1fr; }
+  }
+</style>
 </head>
 <body>
 
-  <!-- Hero -->
-  <section class="hero">
-    <span class="paw-float">🐾</span>
-    <span class="paw-float">🐾</span>
-    <span class="paw-float">🐾</span>
-    <span class="paw-float">🐾</span>
+<!-- Floating paw trail -->
+<div class="paw-trail" id="pawTrail"></div>
 
-    <div class="hero-avatar">🐶</div>
+<nav>
+  <div class="logo">🐾 <span>BIG DOG CLUB</span>™</div>
+  <div class="links">
+    <a href="#home" class="active">Home</a>
+    <a href="#about">About</a>
+    <a href="#join">Join</a>
+    <a href="#collabs">Collabs</a>
+  </div>
+</nav>
 
-    <h1>
-      Patrick Big Dog
-      <span>Bernedoodle. Legend. Big Dumb Goofball.</span>
-    </h1>
+<!-- Hero -->
+<section class="hero" id="home">
+  <div class="paw">🐾</div>
+  <div class="nfc-badge" id="nfc-badge">✨ YOU FOUND PATRICK ✨</div>
+  <h1>BIG DOG <span>CLUB</span>™</h1>
+  <p class="tagline">Patrick isn't a social media account. He's an encounter.</p>
+  <a href="https://www.tiktok.com/@patrickbigdog" target="_blank" class="cta-btn">Watch on TikTok →</a>
+</section>
 
-    <p class="tagline">
-      He didn't ask to be famous. He just showed up, drooled on everything,
-      and accidentally became the internet's favorite dog.
-    </p>
+<div class="divider"></div>
 
-    <div class="hero-cta">
-      <a href="https://bigdogclub.vip" class="btn-primary">
-        🐾 Join the Big Dog Club →
-      </a>
-      <a href="https://tiktok.com/@patrickbigdog" class="btn-tiktok">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.75a8.28 8.28 0 004.84 1.55V6.85a4.85 4.85 0 01-1.07-.16z"/></svg>
-        Follow @patrickbigdog
-      </a>
+<!-- About Patrick -->
+<section id="about" class="reveal">
+  <h2>Meet <span>Patrick</span></h2>
+  <p>Patrick is a Bernedoodle who doesn't know he's famous. He's 80 pounds of confused eye contact, dramatic sighs, and accidentally photogenic moments. He lives in Southern California with his humans Mike and Morgan, where his primary responsibilities include being large and looking concerned.</p>
+  <p>He's the founding member — and only permanent resident — of the Big Dog Club™.</p>
+  
+  <div class="stats">
+    <div class="stat">
+      <div class="number">80</div>
+      <div class="label">Pounds of Dog</div>
     </div>
-  </section>
+    <div class="stat">
+      <div class="number">∞</div>
+      <div class="label">Dramatic Sighs</div>
+    </div>
+    <div class="stat">
+      <div class="number">1</div>
+      <div class="label">Brain Cell</div>
+    </div>
+  </div>
+</section>
 
-  <!-- About -->
-  <section class="about">
-    <h2>Who is Patrick? 🐾</h2>
-    <p>
-      Patrick is a Bernedoodle from Mission Viejo, California. He weighs approximately
-      one thousand pounds, has never had a single thought in his life, and is somehow
-      the most beloved creature on the internet.
-    </p>
-    <p>
-      He likes tennis balls, long walks where he stops every 4 seconds to sniff things,
-      and sitting on people who did not invite him to sit on them.
-    </p>
-    <p>
-      He accidentally started a club. It's growing.
-    </p>
-  </section>
+<div class="divider"></div>
 
-  <!-- Stats -->
-  <section class="stats">
-    <div class="stats-grid">
-      <div class="stat-item">
-        <h3>∞</h3>
-        <p>Drool generated (lbs)</p>
-      </div>
-      <div class="stat-item">
-        <h3>0</h3>
-        <p>Thoughts ever had</p>
-      </div>
-      <div class="stat-item">
-        <h3>100%</h3>
-        <p>Good boy rating</p>
+<!-- Join the Club -->
+<section id="join" class="reveal">
+  <h2>Join the <span>Club</span></h2>
+  <p>Big Dog Club isn't just a TikTok follow. It's a real-world thing. We're building something — NFC-enabled collectibles, loot drops, and the kind of community that only happens when a very large dog accidentally starts a movement.</p>
+  
+  <div class="perks">
+    <div class="perk">
+      <div class="icon">📱</div>
+      <div class="text">
+        <h3>NFC Encounters</h3>
+        <p>Find Patrick's tennis balls, keychains, and tags in the wild. Tap them. See what happens.</p>
       </div>
     </div>
-  </section>
+    <div class="perk">
+      <div class="icon">🎁</div>
+      <div class="text">
+        <h3>Loot Drops</h3>
+        <p>Random physical collectibles for club members. Follow → unlock → receive.</p>
+      </div>
+    </div>
+    <div class="perk">
+      <div class="icon">🐕</div>
+      <div class="text">
+        <h3>Big Dog Energy</h3>
+        <p>A community for people who appreciate large, confused, loveable dogs.</p>
+      </div>
+    </div>
+  </div>
+  
+  <a href="https://www.tiktok.com/@patrickbigdog" target="_blank" class="cta-btn">Follow to Join →</a>
+</section>
 
-  <!-- Join CTA -->
-  <section class="join">
-    <h2>Ready to be a Big Dog? 🏆</h2>
-    <p>
-      The Big Dog Club is where Patrick's people go. Exclusive drops, NFC merch,
-      early access, and content you won't find anywhere else.
-    </p>
-    <a href="https://bigdogclub.vip" class="btn-join">
-      🐾 Join the Big Dog Club
-    </a>
-  </section>
+<div class="divider"></div>
 
-  <footer>
-    © 2026 Patrick Big Dog · patrickbig.dog · Made with 🐾 and questionable judgment
-  </footer>
+<!-- Collaborations -->
+<section id="collabs" class="reveal">
+  <h2><span>Collabs</span></h2>
+  <p>Patrick is open for business — if the vibe is right. We work with brands, creators, and fellow big dogs who get it. No cringe. No forced partnerships. Just good energy and large animals.</p>
+  
+  <div class="collab-types">
+    <div class="collab-card">
+      <span class="icon">🎬</span>
+      <h3>Content Collabs</h3>
+      <p>Duets, features, and crossovers with other dog creators</p>
+    </div>
+    <div class="collab-card">
+      <span class="icon">🏷️</span>
+      <h3>Brand Partnerships</h3>
+      <p>Pet brands, outdoor gear, lifestyle — if Patrick would actually use it</p>
+    </div>
+    <div class="collab-card">
+      <span class="icon">🐾</span>
+      <h3>Big Dog Meetups</h3>
+      <p>Real-world events where large dogs gather and look confused together</p>
+    </div>
+    <div class="collab-card">
+      <span class="icon">✨</span>
+      <h3>NFC Merch</h3>
+      <p>Co-branded NFC collectibles for special collabs and limited drops</p>
+    </div>
+  </div>
+  
+  <p style="text-align: center; margin-top: 2rem;">
+    <a href="https://www.tiktok.com/@patrickbigdog" target="_blank" style="color: var(--accent); text-decoration: none; font-weight: 600; letter-spacing: 0.05em; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.7" onmouseout="this.style.opacity=1">DM us on TikTok →</a>
+  </p>
+</section>
+
+<footer>
+  <p>© 2026 BIG DOG CLUB™ — PATRICK DOES NOT UNDERSTAND COPYRIGHT LAW</p>
+</footer>
+
+<script>
+  // ── Floating paw background ──
+  const trail = document.getElementById('pawTrail');
+  for (let i = 0; i < 18; i++) {
+    const el = document.createElement('div');
+    el.className = 'paw-float';
+    el.textContent = '🐾';
+    el.style.cssText = `
+      left: ${Math.random() * 100}%;
+      top: ${Math.random() * 100}%;
+      --dur: ${(Math.random() * 18 + 12).toFixed(1)}s;
+      --delay: ${(Math.random() * 12).toFixed(1)}s;
+      --rot: ${Math.floor(Math.random() * 60 - 30)}deg;
+    `;
+    trail.appendChild(el);
+  }
+
+  // ── NFC detection ──
+  if (window.location.search.includes('nfc') || document.referrer.includes('nfc')) {
+    document.getElementById('nfc-badge').style.display = 'inline-block';
+  }
+
+  // ── Smooth scroll for nav ──
+  document.querySelectorAll('nav a').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+      document.querySelectorAll('nav a').forEach(l => l.classList.remove('active'));
+      a.classList.add('active');
+    });
+  });
+
+  // ── Active nav on scroll ──
+  window.addEventListener('scroll', () => {
+    const sections = document.querySelectorAll('section[id]');
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 200) current = s.getAttribute('id');
+    });
+    document.querySelectorAll('nav a').forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  });
+
+  // ── Scroll reveal ──
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ── Paw click burst ──
+  document.querySelector('.hero .paw').addEventListener('click', function() {
+    const burst = ['🐾','🐶','✨','🏆'];
+    for (let i = 0; i < 8; i++) {
+      const el = document.createElement('div');
+      el.textContent = burst[Math.floor(Math.random() * burst.length)];
+      el.style.cssText = `
+        position: fixed;
+        left: 50%; top: 45%;
+        font-size: ${Math.random() * 1.5 + 1}rem;
+        pointer-events: none;
+        z-index: 999;
+        animation: burst 0.8s ease-out forwards;
+        --dx: ${(Math.random() * 200 - 100)}px;
+        --dy: ${(Math.random() * -200 - 50)}px;
+      `;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 900);
+    }
+  });
+
+  // Burst keyframe injection
+  if (!document.getElementById('burst-style')) {
+    const s = document.createElement('style');
+    s.id = 'burst-style';
+    s.textContent = `
+      @keyframes burst {
+        0%   { opacity: 1; transform: translate(-50%,-50%) scale(0.5); }
+        60%  { opacity: 1; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.2); }
+        100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-60% + var(--dy))) scale(0.8); }
+      }
+    `;
+    document.head.appendChild(s);
+  }
+</script>
 
 </body>
 </html>
